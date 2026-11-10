@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>IE Data Copilot - 工业数据分析助手</title>
+<style>
+  :root {
+    --primary: #ff4b4b;
+    --sidebar-bg: #f0f2f6;
+    --text: #262730;
+    --muted: #6c6f78;
+    --border: #e6e9ef;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", "Microsoft YaHei", -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--text);
+    background: #ffffff;
+  }
+  .app { display: flex; min-height: 100vh; }
+
+  /* 侧边栏 */
+  .sidebar {
+    width: 280px;
+    min-width: 280px;
+    background: var(--sidebar-bg);
+    padding: 32px 24px;
+    border-right: 1px solid var(--border);
+  }
+  .sidebar h2 {
+    font-size: 20px;
+    margin: 0 0 24px;
+    font-weight: 600;
+  }
+  .upload-label { font-size: 14px; color: var(--text); margin-bottom: 8px; }
+  .upload-zone {
+    background: #fff;
+    border: 1px dashed #c0c4cf;
+    border-radius: 8px;
+    padding: 28px 16px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .upload-zone .browse { color: var(--primary); font-weight: 500; }
+  .hint {
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* 主区 */
+  .main {
+    flex: 1;
+    padding: 32px 48px 64px;
+    max-width: 1150px;
+  }
+  h1 { font-size: 34px; font-weight: 700; margin: 0 0 32px; }
+  h2 { font-size: 24px; font-weight: 600; margin: 36px 0 16px; }
+  .section-note { color: var(--muted); font-size: 13px; margin: 8px 0 16px; }
+
+  /* 表格 */
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 13px;
+    min-width: 860px;
+  }
+  th, td {
+    padding: 8px 12px;
+    text-align: right;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  th {
+    background: #fafafa;
+    font-weight: 600;
+    color: var(--text);
+  }
+  tr:last-child td { border-bottom: none; }
+  td:nth-child(1), td:nth-child(2), td:nth-child(3) { text-align: left; }
+  th:nth-child(1), th:nth-child(2), th:nth-child(3) { text-align: left; }
+
+  /* 图表 */
+  .chart {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 24px;
+    display: block;
+  }
+  .chart-caption {
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    margin: -14px 0 28px;
+  }
+
+  /* 问答 */
+  .qa-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 40px 0 28px;
+  }
+  input[type="text"] {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 15px;
+    border: 1px solid #c0c4cf;
+    border-radius: 8px;
+    margin-bottom: 14px;
+    outline: none;
+  }
+  input[type="text"]:focus { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+  .primary-btn {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 22px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .answer {
+    margin-top: 24px;
+    padding: 16px 18px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #fafafa;
+    color: var(--muted);
+    font-size: 14px;
+    min-height: 64px;
+  }
+</style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <h2>数据上传</h2>
+      <div class="upload-label">上传 CSV 文件</div>
+      <div class="upload-zone">
+        <div>拖拽文件到此处，或</div>
+        <div class="browse">Browse files</div>
+        <div style="font-size:12px; margin-top:8px;">限制：CSV，每个文件 ≤ 200MB</div>
+      </div>
+      <div class="hint">已上传：cleaned_data.csv<br/>未上传时，将使用内置示例数据 data/raw/simulated_production_hours.csv。</div>
+    </aside>
+
+    <main class="main">
+      <h1>IE Data Copilot - 工业数据分析助手</h1>
+
+      <h2>数据预览（前 10 行）</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>日期</th><th>产线</th><th>工序</th>
+              <th>标准工时</th><th>实际工时</th><th>产量</th><th>不良数</th>
+              <th>停机时长</th><th>工时达成率</th><th>UPPH</th><th>不良率</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>2026-09-01</td><td>A线</td><td>冲压</td><td>7.60</td><td>6.86</td><td>150</td><td>7</td><td>0.55</td><td>1.108</td><td>21.866</td><td>0.047</td></tr>
+            <tr><td>2026-09-02</td><td>B线</td><td>焊接</td><td>7.69</td><td>6.88</td><td>102</td><td>18</td><td>1.29</td><td>1.118</td><td>14.826</td><td>0.176</td></tr>
+            <tr><td>2026-09-03</td><td>C线</td><td>组装</td><td>7.05</td><td>6.32</td><td>135</td><td>7</td><td>0.27</td><td>1.116</td><td>21.361</td><td>0.052</td></tr>
+            <tr><td>2026-09-04</td><td>A线</td><td>检测</td><td>6.50</td><td>7.19</td><td>219</td><td>13</td><td>0.40</td><td>0.904</td><td>30.459</td><td>0.059</td></tr>
+            <tr><td>2026-09-05</td><td>B线</td><td>包装</td><td>6.55</td><td>7.11</td><td>81</td><td>5</td><td>0.24</td><td>0.921</td><td>11.392</td><td>0.062</td></tr>
+            <tr><td>2026-09-06</td><td>C线</td><td>冲压</td><td>6.39</td><td>7.79</td><td>166</td><td>0</td><td>0.00</td><td>0.820</td><td>21.309</td><td>0.000</td></tr>
+            <tr><td>2026-09-07</td><td>A线</td><td>焊接</td><td>6.23</td><td>5.65</td><td>168</td><td>8</td><td>0.71</td><td>1.103</td><td>29.735</td><td>0.048</td></tr>
+            <tr><td>2026-09-08</td><td>B线</td><td>组装</td><td>7.34</td><td>8.78</td><td>176</td><td>2</td><td>0.00</td><td>0.836</td><td>20.046</td><td>0.011</td></tr>
+            <tr><td>2026-09-09</td><td>C线</td><td>检测</td><td>7.38</td><td>8.49</td><td>238</td><td>11</td><td>0.43</td><td>0.869</td><td>28.033</td><td>0.046</td></tr>
+            <tr><td>2026-09-10</td><td>A线</td><td>包装</td><td>6.11</td><td>5.83</td><td>154</td><td>2</td><td>0.00</td><td>1.048</td><td>26.415</td><td>0.013</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>可视化分析</h2>
+      <img class="chart" src="../../assets/charts/avg_achievement_rate_by_line.png" alt="各产线平均工时达成率" />
+      <div class="chart-caption">各产线平均工时达成率</div>
+      <img class="chart" src="../../assets/charts/daily_upph_trend.png" alt="每日 UPPH 变化趋势（按产线）" />
+      <div class="chart-caption">每日 UPPH 变化趋势（按产线）</div>
+      <img class="chart" src="../../assets/charts/defect_rate_by_process.png" alt="各工序不良率对比" />
+      <div class="chart-caption">各工序不良率对比</div>
+
+      <hr class="qa-divider" />
+      <h2>向数据提问</h2>
+      <input type="text" placeholder="请输入你的问题（自然语言）" value="本周 A 线工时达成率趋势如何？" />
+      <button class="primary-btn">提交问题</button>
+      <div class="answer">（提交后在此展示 DeepSeek 返回的表格、数值或文字说明）</div>
+    </main>
+  </div>
+</body>
+</html>

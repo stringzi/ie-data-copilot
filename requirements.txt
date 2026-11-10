@@ -1,0 +1,7 @@
+streamlit>=1.36,<2.0
+pandas>=2.0,<3.0
+numpy>=1.24,<3.0
+matplotlib>=3.7,<4.0
+seaborn>=0.13,<1.0
+openai>=1.35,<3.0
+python-dotenv>=1.0,<2.0
