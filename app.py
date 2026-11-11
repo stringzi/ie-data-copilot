@@ -222,7 +222,7 @@ def main() -> None:
         uploaded = st.file_uploader("上传生产数据 CSV", type=["csv"])
         st.caption("未上传时使用内置示例数据。上传后会自动完成去重、缺失值处理与指标计算。")
         with st.expander("高级设置"):
-            manual_key = st.text_input(
+            st.text_input(
                 "临时 DeepSeek API Key",
                 type="password",
                 help="仅保存在当前会话中。正式使用请配置环境变量或 .env。",
